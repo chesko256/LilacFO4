@@ -11,47 +11,58 @@ endFunction
 
 ; Test Suites =================================================================
 
-function ConditionTestCases()
+bool function ConditionTestCases()
 	it("'to' should be true", case_condition_to())
 	it("'notTo' should be false", case_condition_notTo())
+	return true
 endFunction
 
-function MatcherTestCases()
+bool function MatcherTestCases()
 	it("'beEqualTo' should evaluate equality", case_matcher_beEqualTo())
+	it("'beEqualTo' should evaluate equality (untyped)", case_matcher_beEqualTo_untyped())
 	it("'beLessThan' should evaluate less than", case_matcher_beLessThan())
+	it("'beLessThan' should evaluate less than (untyped)", case_matcher_beLessThan_untyped())
 	it("'beLessThanOrEqualTo' should evaluate less than or equal to", case_matcher_beLessThanOrEqualTo())
+	it("'beLessThanOrEqualTo' should evaluate less than or equal to (untyped)", case_matcher_beLessThanOrEqualTo_untyped())
 	it("'beGreaterThan' should evaluate greater than", case_matcher_beGreaterThan())
+	it("'beGreaterThan' should evaluate greater than (untyped)", case_matcher_beGreaterThan_untyped())
 	it("'beGreaterThanOrEqualTo' should evaluate greater than or equal to", case_matcher_beGreaterThanOrEqualTo())
+	it("'beGreaterThanOrEqualTo' should evaluate greater than or equal to (untyped)", case_matcher_beGreaterThanOrEqualTo_untyped())
 	it("'beTruthy' should evaluate truthiness", case_matcher_beTruthy())
+	it("'beTruthy' should evaluate truthiness (untyped)", case_matcher_beTruthy_untyped())
 	it("'beFalsy' should evaluate falsiness", case_matcher_beFalsy())
-	it("'contain' should evaluate substring", case_matcher_contain())
+	it("'beFalsy' should evaluate falsiness (untyped)", case_matcher_beFalsy_untyped())
 	it("'beNone' should evaluate None", case_matcher_beNone())
+	it("'beNone' should evaluate None (untyped)", case_matcher_beNone_untyped())
+	return true
 endFunction
 
-function TestCaseTestCases()
+bool function TestCaseTestCases()
 	it("should run beforeEach and afterEach before and after every test case", case_testcase_BeforeAfterEach())
 	it("'describe' should run all test cases in its suite", case_testcase_describe())
+	return true
 endFunction
 
-function MessageTestCases()
+bool function MessageTestCases()
 	it("should create correct step failure messages", case_message_stepfailure())
 	it("should create an invalid matcher message", case_message_invalidmatcher())
+	return true
 endFunction
 
 
 ; Test Cases ==================================================================
 
 mockLilac mockLilacTest
-Armor ArmorIronCuirass
+Armor Armor_Army_Helmet
 ObjectReference TestArmorRef
 Form EmptyForm
 
 function beforeAll()
-	mockLilacTest = Game.GetFormFromFile(0x12C5, "LilacTestLilac.esp") as mockLilac
+	mockLilacTest = Game.GetFormFromFile(0x000F99, "LilacTestLilac.esp") as mockLilac
 	mockLilacTest.mockLastLilacDebugMessage = ""
 	mockLilacTest.mockLastRaisedResultResult = true
-	ArmorIronCuirass = Game.GetFormFromFile(0x12E49, "Skyrim.esm") as Armor
-	TestArmorRef = Game.GetPlayer().PlaceAtMe(ArmorIronCuirass)
+	Armor_Army_Helmet = Game.GetFormFromFile(0x23432, "Fallout4.esm") as Armor
+	TestArmorRef = Game.GetPlayer().PlaceAtMe(Armor_Army_Helmet)
 	EmptyForm = None
 endFunction
 
@@ -66,7 +77,7 @@ function afterAll()
 	mockLilacTest.mockLastLilacDebugMessage = ""
 	mockLilacTest.mockLastRaisedResultResult = true
 	mockLilacTest = None
-	ArmorIronCuirass = None
+	Armor_Army_Helmet = None
 	TestArmorRef.Disable()
 	TestArmorRef.Delete()
 endFunction
@@ -79,15 +90,17 @@ function afterEach()
 endFunction
 
 
-function case_condition_to()
+bool function case_condition_to()
 	expectBool(self.to, to, beTruthy)
+	return true
 endFunction
 
-function case_condition_notTo()
+bool function case_condition_notTo()
 	expectBool(self.notTo, to, beFalsy)
+	return true
 endFunction
 
-function case_matcher_beEqualTo()
+bool function case_matcher_beEqualTo()
 	expectInt(5, to, beEqualTo, 5)
 	expectInt(5, notTo, beEqualTo, 12)
 
@@ -103,16 +116,43 @@ function case_matcher_beEqualTo()
 	expectString("test string", notTo, beEqualTo, "other string")
 	expectString("", to, beEqualTo, "")
 
-	expectForm(ArmorIronCuirass, to, beEqualTo, ArmorIronCuirass)
-	expectForm(ArmorIronCuirass, notTo, beEqualTo, None)
-	expectForm(ArmorIronCuirass, notTo, beEqualTo, Game.GetPlayer().GetActorBase())
+	expectForm(Armor_Army_Helmet, to, beEqualTo, Armor_Army_Helmet)
+	expectForm(Armor_Army_Helmet, notTo, beEqualTo, None)
+	expectForm(Armor_Army_Helmet, notTo, beEqualTo, Game.GetPlayer().GetActorBase())
 
 	expectRef(TestArmorRef, to, beEqualTo, TestArmorRef)
 	expectRef(TestArmorRef, notTo, beEqualTo, None)
 	expectRef(TestArmorRef, notTo, beEqualTo, Game.GetPlayer())
+	return true
 endFunction
 
-function case_matcher_beLessThan()
+bool function case_matcher_beEqualTo_untyped()
+	expect(5, to, beEqualTo, 5)
+	expect(5, notTo, beEqualTo, 12)
+
+	expect(7.0, to, beEqualTo, 7.0)
+	expect(7.0, notTo, beEqualTo, 3.45)
+
+	expect(true, to, beEqualTo, true)
+	expect(false, to, beEqualTo, false)
+	expect(true, notTo, beEqualTo, false)
+	expect(false, notTo, beEqualTo, true)
+
+	expect("test string", to, beEqualTo, "test string")
+	expect("test string", notTo, beEqualTo, "other string")
+	expect("", to, beEqualTo, "")
+
+	expect(Armor_Army_Helmet, to, beEqualTo, Armor_Army_Helmet)
+	expect(Armor_Army_Helmet, notTo, beEqualTo, None)
+	expect(Armor_Army_Helmet, notTo, beEqualTo, Game.GetPlayer().GetActorBase())
+
+	expect(TestArmorRef, to, beEqualTo, TestArmorRef)
+	expect(TestArmorRef, notTo, beEqualTo, None)
+	expect(TestArmorRef, notTo, beEqualTo, Game.GetPlayer())
+	return true
+endFunction
+
+bool function case_matcher_beLessThan()
 	expectInt(3, to, beLessThan, 1000)
 	expectInt(3, to, beLessThan, 4)
 	expectInt(3, notTo, beLessThan, 3)
@@ -138,9 +178,39 @@ function case_matcher_beLessThan()
 	expectFloat(-12.6, notTo, beLessThan, -12.6)
 	expectFloat(-12.6, notTo, beLessThan, -13.0)
 	expectFloat(-12.6, notTo, beLessThan, -100.0)
+	return true
 endFunction
 
-function case_matcher_beLessThanOrEqualTo()
+bool function case_matcher_beLessThan_untyped()
+	expect(3, to, beLessThan, 1000)
+	expect(3, to, beLessThan, 4)
+	expect(3, notTo, beLessThan, 3)
+	expect(3, notTo, beLessThan, 1)
+
+	expect(-5, to, beLessThan, 1000)
+	expect(-5, to, beLessThan, -4)
+	expect(-5, notTo, beLessThan, -5)
+	expect(-5, notTo, beLessThan, -7)
+
+	expect(4.5, to, beLessThan, 100.0)
+	expect(4.5, to, beLessThan, 5.0)
+	expect(4.5, to, beLessThan, 4.6)
+	expect(4.5, to, beLessThan, 4.51)
+	expect(4.5, notTo, beLessThan, 4.5)
+	expect(4.5, notTo, beLessThan, 4.4)
+	expect(4.5, notTo, beLessThan, 1.0)
+
+	expect(-12.6, to, beLessThan, 100.0)
+	expect(-12.6, to, beLessThan, -12.0)
+	expect(-12.6, to, beLessThan, -12.5)
+	expect(-12.6, to, beLessThan, -12.59)
+	expect(-12.6, notTo, beLessThan, -12.6)
+	expect(-12.6, notTo, beLessThan, -13.0)
+	expect(-12.6, notTo, beLessThan, -100.0)
+	return true
+endFunction
+
+bool function case_matcher_beLessThanOrEqualTo()
 	expectInt(3, to, beLessThanOrEqualTo, 1000)
 	expectInt(3, to, beLessThanOrEqualTo, 4)
 	expectInt(3, to, beLessThanOrEqualTo, 3)
@@ -166,9 +236,39 @@ function case_matcher_beLessThanOrEqualTo()
 	expectFloat(-12.6, to, beLessThanOrEqualTo, -12.6)
 	expectFloat(-12.6, notTo, beLessThanOrEqualTo, -13.0)
 	expectFloat(-12.6, notTo, beLessThanOrEqualTo, -100.0)
+	return true
 endFunction
 
-function case_matcher_beGreaterThan()
+bool function case_matcher_beLessThanOrEqualTo_untyped()
+	expect(3, to, beLessThanOrEqualTo, 1000)
+	expect(3, to, beLessThanOrEqualTo, 4)
+	expect(3, to, beLessThanOrEqualTo, 3)
+	expect(3, notTo, beLessThanOrEqualTo, 1)
+
+	expect(-5, to, beLessThanOrEqualTo, 1000)
+	expect(-5, to, beLessThanOrEqualTo, -4)
+	expect(-5, to, beLessThanOrEqualTo, -5)
+	expect(-5, notTo, beLessThanOrEqualTo, -7)
+
+	expect(4.5, to, beLessThanOrEqualTo, 100.0)
+	expect(4.5, to, beLessThanOrEqualTo, 5.0)
+	expect(4.5, to, beLessThanOrEqualTo, 4.6)
+	expect(4.5, to, beLessThanOrEqualTo, 4.51)
+	expect(4.5, to, beLessThanOrEqualTo, 4.5)
+	expect(4.5, notTo, beLessThanOrEqualTo, 4.4)
+	expect(4.5, notTo, beLessThanOrEqualTo, 1.0)
+
+	expect(-12.6, to, beLessThanOrEqualTo, 100.0)
+	expect(-12.6, to, beLessThanOrEqualTo, -12.0)
+	expect(-12.6, to, beLessThanOrEqualTo, -12.5)
+	expect(-12.6, to, beLessThanOrEqualTo, -12.59)
+	expect(-12.6, to, beLessThanOrEqualTo, -12.6)
+	expect(-12.6, notTo, beLessThanOrEqualTo, -13.0)
+	expect(-12.6, notTo, beLessThanOrEqualTo, -100.0)
+	return true
+endFunction
+
+bool function case_matcher_beGreaterThan()
 	expectInt(7, to, beGreaterThan, 5)
 	expectInt(7, to, beGreaterThan, -6)
 	expectInt(7, to, beGreaterThan, 6)
@@ -197,9 +297,42 @@ function case_matcher_beGreaterThan()
 	expectFloat(-12.6, notTo, beGreaterThan, -12.6)
 	expectFloat(-12.6, notTo, beGreaterThan, -12.5)
 	expectFloat(-12.6, notTo, beGreaterThan, 100.0)
+	return true
 endFunction
 
-function case_matcher_beGreaterThanOrEqualTo()
+bool function case_matcher_beGreaterThan_untyped()
+	expect(7, to, beGreaterThan, 5)
+	expect(7, to, beGreaterThan, -6)
+	expect(7, to, beGreaterThan, 6)
+	expect(7, notTo, beGreaterThan, 7)
+	expect(7, notTo, beGreaterThan, 8)
+
+	expect(-8, to, beGreaterThan, -10)
+	expect(-8, to, beGreaterThan, -1000)
+	expect(-8, to, beGreaterThan, -9)
+	expect(-8, notTo, beGreaterThan, -8)
+	expect(-8, notTo, beGreaterThan, -7)
+	expect(-8, notTo, beGreaterThan, 12)
+
+	expect(4.5, to, beGreaterThan, 1.0)
+	expect(4.5, to, beGreaterThan, 4.0)
+	expect(4.5, to, beGreaterThan, 4.4)
+	expect(4.5, to, beGreaterThan, 4.45)
+	expect(4.5, to, beGreaterThan, 4.4999)
+	expect(4.5, notTo, beGreaterThan, 4.5)
+	expect(4.5, notTo, beGreaterThan, 23.6)
+
+	expect(-12.6, to, beGreaterThan, -100.0)
+	expect(-12.6, to, beGreaterThan, -14.0)
+	expect(-12.6, to, beGreaterThan, -12.7)
+	expect(-12.6, to, beGreaterThan, -12.61)
+	expect(-12.6, notTo, beGreaterThan, -12.6)
+	expect(-12.6, notTo, beGreaterThan, -12.5)
+	expect(-12.6, notTo, beGreaterThan, 100.0)
+	return true
+endFunction
+
+bool function case_matcher_beGreaterThanOrEqualTo()
 	expectInt(7, to, beGreaterThanOrEqualTo, 5)
 	expectInt(7, to, beGreaterThanOrEqualTo, -6)
 	expectInt(7, to, beGreaterThanOrEqualTo, 6)
@@ -229,9 +362,43 @@ function case_matcher_beGreaterThanOrEqualTo()
 	expectFloat(-12.6, to, beGreaterThanOrEqualTo, -12.6)
 	expectFloat(-12.6, notTo, beGreaterThanOrEqualTo, -12.5)
 	expectFloat(-12.6, notTo, beGreaterThanOrEqualTo, 100.0)
+	return true
 endFunction
 
-function case_matcher_beTruthy()
+bool function case_matcher_beGreaterThanOrEqualTo_untyped()
+	expect(7, to, beGreaterThanOrEqualTo, 5)
+	expect(7, to, beGreaterThanOrEqualTo, -6)
+	expect(7, to, beGreaterThanOrEqualTo, 6)
+	expect(7, to, beGreaterThanOrEqualTo, 7)
+	expect(7, notTo, beGreaterThanOrEqualTo, 8)
+
+	expect(-8, to, beGreaterThanOrEqualTo, -10)
+	expect(-8, to, beGreaterThanOrEqualTo, -1000)
+	expect(-8, to, beGreaterThanOrEqualTo, -9)
+	expect(-8, to, beGreaterThanOrEqualTo, -8)
+	expect(-8, notTo, beGreaterThanOrEqualTo, -7)
+	expect(-8, notTo, beGreaterThanOrEqualTo, 12)
+
+	expect(4.5, to, beGreaterThanOrEqualTo, 1.0)
+	expect(4.5, to, beGreaterThanOrEqualTo, 4.0)
+	expect(4.5, to, beGreaterThanOrEqualTo, 4.4)
+	expect(4.5, to, beGreaterThanOrEqualTo, 4.45)
+	expect(4.5, to, beGreaterThanOrEqualTo, 4.4999)
+	expect(4.5, to, beGreaterThanOrEqualTo, 4.5)
+	expect(4.5, notTo, beGreaterThanOrEqualTo, 4.51)
+	expect(4.5, notTo, beGreaterThanOrEqualTo, 23.6)
+
+	expect(-12.6, to, beGreaterThanOrEqualTo, -100.0)
+	expect(-12.6, to, beGreaterThanOrEqualTo, -14.0)
+	expect(-12.6, to, beGreaterThanOrEqualTo, -12.7)
+	expect(-12.6, to, beGreaterThanOrEqualTo, -12.61)
+	expect(-12.6, to, beGreaterThanOrEqualTo, -12.6)
+	expect(-12.6, notTo, beGreaterThanOrEqualTo, -12.5)
+	expect(-12.6, notTo, beGreaterThanOrEqualTo, 100.0)
+	return true
+endFunction
+
+bool function case_matcher_beTruthy()
 	expectInt(1, to, beTruthy)
 	expectInt(0, notTo, beTruthy)
 	expectInt(-1, to, beTruthy)
@@ -244,7 +411,7 @@ function case_matcher_beTruthy()
 	expectBool(true, to, beTruthy)
 	expectBool(false, notTo, beTruthy)
 
-	expectForm(ArmorIronCuirass, to, beTruthy)
+	expectForm(Armor_Army_Helmet, to, beTruthy)
 	expectForm(EmptyForm, notTo, beTruthy)
 
 	ObjectReference EmptyRef = None
@@ -253,9 +420,35 @@ function case_matcher_beTruthy()
 
 	expectString("test string", to, beTruthy)
 	expectString("", notTo, beTruthy)
+	return true
 endFunction
 
-function case_matcher_beFalsy()
+bool function case_matcher_beTruthy_untyped()
+	expect(1, to, beTruthy)
+	expect(0, notTo, beTruthy)
+	expect(-1, to, beTruthy)
+
+	expect(1.0, to, beTruthy)
+	expect(0.001, to, beTruthy)
+	expect(0.0, notTo, beTruthy)
+	expect(-12.5, to, beTruthy)
+
+	expect(true, to, beTruthy)
+	expect(false, notTo, beTruthy)
+
+	expect(Armor_Army_Helmet, to, beTruthy)
+	expect(EmptyForm, notTo, beTruthy)
+
+	ObjectReference EmptyRef = None
+	expect(TestArmorRef, to, beTruthy)
+	expect(EmptyRef, notTo, beTruthy)
+
+	expect("test string", to, beTruthy)
+	expect("", notTo, beTruthy)
+	return true
+endFunction
+
+bool function case_matcher_beFalsy()
 	expectInt(1, notTo, beFalsy)
 	expectInt(0, to, beFalsy)
 	expectInt(-1, notTo, beFalsy)
@@ -268,7 +461,7 @@ function case_matcher_beFalsy()
 	expectBool(true, notTo, beFalsy)
 	expectBool(false, to, beFalsy)
 
-	expectForm(ArmorIronCuirass, notTo, beFalsy)
+	expectForm(Armor_Army_Helmet, notTo, beFalsy)
 	expectForm(EmptyForm, to, beFalsy)
 
 	ObjectReference EmptyRef = None
@@ -277,29 +470,55 @@ function case_matcher_beFalsy()
 
 	expectString("test string", notTo, beFalsy)
 	expectString("", to, beFalsy)
+	return true
 endFunction
 
-function case_matcher_contain()
-	expectString("test string", to, contain, "test")
-	expectString("skyrim", to, contain, "rim")
-	expectString("The Elder Scrolls", to, contain, "r s")
-	expectString("The Elder Scrolls", to, contain, " ")
-	expectString("The 418th Step", to, contain, "418")
-	expectString("foo", notTo, contain, "bar")
-	expectString("Riverwood", notTo, contain, "Solitude")
-	expectString("5", notTo, contain, "6")
+bool function case_matcher_beFalsy_untyped()
+	expect(1, notTo, beFalsy)
+	expect(0, to, beFalsy)
+	expect(-1, notTo, beFalsy)
+
+	expect(1.0, notTo, beFalsy)
+	expect(0.001, notTo, beFalsy)
+	expect(0.0, to, beFalsy)
+	expect(-12.5, notTo, beFalsy)
+
+	expect(true, notTo, beFalsy)
+	expect(false, to, beFalsy)
+
+	expect(Armor_Army_Helmet, notTo, beFalsy)
+	expect(EmptyForm, to, beFalsy)
+
+	ObjectReference EmptyRef = None
+	expect(TestArmorRef, notTo, beFalsy)
+	expect(EmptyRef, to, beFalsy)
+
+	expect("test string", notTo, beFalsy)
+	expect("", to, beFalsy)
+	return true
 endFunction
 
-function case_matcher_beNone()
+bool function case_matcher_beNone()
 	expectForm(EmptyForm, to, beNone)
-	expectForm(ArmorIronCuirass, notTo, beNone)
+	expectForm(Armor_Army_Helmet, notTo, beNone)
 
 	ObjectReference EmptyRef = None
 	expectRef(EmptyRef, to, beNone)
 	expectRef(TestArmorRef, notTo, beNone)
+	return true
 endFunction
 
-function case_message_stepfailure()
+bool function case_matcher_beNone_untyped()
+	expect(EmptyForm, to, beNone)
+	expect(Armor_Army_Helmet, notTo, beNone)
+
+	ObjectReference EmptyRef = None
+	expect(EmptyRef, to, beNone)
+	expect(TestArmorRef, notTo, beNone)
+	return true
+endFunction
+
+bool function case_message_stepfailure()
 	int i = 0
 
 	mockLilacTest.failedActuals[i] = "5"
@@ -456,28 +675,6 @@ function case_message_stepfailure()
 
 	i += 1
 
-	mockLilacTest.failedActuals[i] = "Foo"
-	mockLilacTest.failedConditions[i] = to
-	mockLilacTest.failedMatchers[i] = contain
-	mockLilacTest.failedExpecteds[i] = "Bar"
-	mockLilacTest.failedExpectNumbers[i] = i + 1
-
-	expectString( mockLilacTest.CreateStepFailureMessage(i), to, beEqualTo, \
-		         "        - Expect 15: expected Foo to contain Bar")
-
-	i += 1
-
-	mockLilacTest.failedActuals[i] = "Foo"
-	mockLilacTest.failedConditions[i] = notTo
-	mockLilacTest.failedMatchers[i] = contain
-	mockLilacTest.failedExpecteds[i] = "Foo"
-	mockLilacTest.failedExpectNumbers[i] = i + 1
-
-	expectString( mockLilacTest.CreateStepFailureMessage(i), to, beEqualTo, \
-		         "        - Expect 16: expected Foo not to contain Foo")
-
-	i += 1
-
 	mockLilacTest.failedActuals[i] = "WeaponObject"
 	mockLilacTest.failedConditions[i] = to
 	mockLilacTest.failedMatchers[i] = beNone
@@ -485,7 +682,7 @@ function case_message_stepfailure()
 	mockLilacTest.failedExpectNumbers[i] = i + 1
 
 	expectString( mockLilacTest.CreateStepFailureMessage(i), to, beEqualTo, \
-		         "        - Expect 17: expected WeaponObject to be None")
+		         "        - Expect 15: expected WeaponObject to be None")
 
 	i += 1
 
@@ -496,17 +693,18 @@ function case_message_stepfailure()
 	mockLilacTest.failedExpectNumbers[i] = i + 1
 
 	expectString( mockLilacTest.CreateStepFailureMessage(i), to, beEqualTo, \
-		         "        - Expect 18: expected None not to be None")
+		         "        - Expect 16: expected None not to be None")
 
+	return true
 endFunction
 
-function case_message_invalidmatcher()
+bool function case_message_invalidmatcher()
 
 	; expectForm
 	mockLilacTest.mockLastRaisedResultResult = true
 	mockLilacTest.mockLastLilacDebugMessage = ""
 
-	mockLilacTest.expectForm(ArmorIronCuirass, to, beGreaterThan, ArmorIronCuirass)
+	mockLilacTest.expectForm(Armor_Army_Helmet, to, beGreaterThan, Armor_Army_Helmet)
 	expectBool(mockLilacTest.mockLastRaisedResultResult, to, beFalsy)
 	expectString(mockLilacTest.mockLastLilacDebugMessage, to, beEqualTo, \
 		         "[Lilac] ERROR - Invalid matcher 'beGreaterThan' used.")
@@ -514,7 +712,7 @@ function case_message_invalidmatcher()
 	mockLilacTest.mockLastRaisedResultResult = true
 	mockLilacTest.mockLastLilacDebugMessage = ""
 
-	mockLilacTest.expectForm(ArmorIronCuirass, to, beGreaterThanOrEqualTo, None)
+	mockLilacTest.expectForm(Armor_Army_Helmet, to, beGreaterThanOrEqualTo, None)
 	expectBool(mockLilacTest.mockLastRaisedResultResult, to, beFalsy)
 	expectString(mockLilacTest.mockLastLilacDebugMessage, to, beEqualTo, \
 		         "[Lilac] ERROR - Invalid matcher 'beGreaterThanOrEqualTo' used.")
@@ -522,7 +720,7 @@ function case_message_invalidmatcher()
 	mockLilacTest.mockLastRaisedResultResult = true
 	mockLilacTest.mockLastLilacDebugMessage = ""
 
-	mockLilacTest.expectForm(ArmorIronCuirass, to, beLessThan, ArmorIronCuirass)
+	mockLilacTest.expectForm(Armor_Army_Helmet, to, beLessThan, Armor_Army_Helmet)
 	expectBool(mockLilacTest.mockLastRaisedResultResult, to, beFalsy)
 	expectString(mockLilacTest.mockLastLilacDebugMessage, to, beEqualTo, \
 		         "[Lilac] ERROR - Invalid matcher 'beLessThan' used.")
@@ -530,7 +728,7 @@ function case_message_invalidmatcher()
 	mockLilacTest.mockLastRaisedResultResult = true
 	mockLilacTest.mockLastLilacDebugMessage = ""
 
-	mockLilacTest.expectForm(ArmorIronCuirass, to, beLessThanOrEqualTo, None)
+	mockLilacTest.expectForm(Armor_Army_Helmet, to, beLessThanOrEqualTo, None)
 	expectBool(mockLilacTest.mockLastRaisedResultResult, to, beFalsy)
 	expectString(mockLilacTest.mockLastLilacDebugMessage, to, beEqualTo, \
 		         "[Lilac] ERROR - Invalid matcher 'beLessThanOrEqualTo' used.")
@@ -538,15 +736,7 @@ function case_message_invalidmatcher()
 	mockLilacTest.mockLastRaisedResultResult = true
 	mockLilacTest.mockLastLilacDebugMessage = ""
 
-	mockLilacTest.expectForm(ArmorIronCuirass, to, contain, ArmorIronCuirass)
-	expectBool(mockLilacTest.mockLastRaisedResultResult, to, beFalsy)
-	expectString(mockLilacTest.mockLastLilacDebugMessage, to, beEqualTo, \
-		         "[Lilac] ERROR - Invalid matcher 'contain' used.")
-
-	mockLilacTest.mockLastRaisedResultResult = true
-	mockLilacTest.mockLastLilacDebugMessage = ""
-
-	mockLilacTest.expectForm(ArmorIronCuirass, notTo, beGreaterThan, None)
+	mockLilacTest.expectForm(Armor_Army_Helmet, notTo, beGreaterThan, None)
 	expectBool(mockLilacTest.mockLastRaisedResultResult, to, beFalsy)
 	expectString(mockLilacTest.mockLastLilacDebugMessage, to, beEqualTo, \
 		         "[Lilac] ERROR - Invalid matcher 'beGreaterThan' used.")
@@ -586,23 +776,6 @@ function case_message_invalidmatcher()
 	expectString(mockLilacTest.mockLastLilacDebugMessage, to, beEqualTo, \
 		         "[Lilac] ERROR - Invalid matcher 'beLessThanOrEqualTo' used.")
 
-	mockLilacTest.mockLastRaisedResultResult = true
-	mockLilacTest.mockLastLilacDebugMessage = ""
-
-	mockLilacTest.expectRef(TestArmorRef, to, contain, TestArmorRef)
-	expectBool(mockLilacTest.mockLastRaisedResultResult, to, beFalsy)
-	expectString(mockLilacTest.mockLastLilacDebugMessage, to, beEqualTo, \
-		         "[Lilac] ERROR - Invalid matcher 'contain' used.")
-
-	mockLilacTest.mockLastRaisedResultResult = true
-	mockLilacTest.mockLastLilacDebugMessage = ""
-
-	mockLilacTest.expectRef(TestArmorRef, notTo, contain, TestArmorRef)
-	expectBool(mockLilacTest.mockLastRaisedResultResult, to, beFalsy)
-	expectString(mockLilacTest.mockLastLilacDebugMessage, to, beEqualTo, \
-		         "[Lilac] ERROR - Invalid matcher 'contain' used.")
-
-
 
 	; expectInt
 	mockLilacTest.mockLastRaisedResultResult = true
@@ -612,14 +785,6 @@ function case_message_invalidmatcher()
 	expectBool(mockLilacTest.mockLastRaisedResultResult, to, beFalsy)
 	expectString(mockLilacTest.mockLastLilacDebugMessage, to, beEqualTo, \
 		         "[Lilac] ERROR - Invalid matcher 'beNone' used.")
-
-	mockLilacTest.mockLastRaisedResultResult = true
-	mockLilacTest.mockLastLilacDebugMessage = ""
-
-	mockLilacTest.expectInt(5, to, contain, 5)
-	expectBool(mockLilacTest.mockLastRaisedResultResult, to, beFalsy)
-	expectString(mockLilacTest.mockLastLilacDebugMessage, to, beEqualTo, \
-		         "[Lilac] ERROR - Invalid matcher 'contain' used.")
 
 	mockLilacTest.mockLastRaisedResultResult = true
 	mockLilacTest.mockLastLilacDebugMessage = ""
@@ -638,22 +803,6 @@ function case_message_invalidmatcher()
 	expectBool(mockLilacTest.mockLastRaisedResultResult, to, beFalsy)
 	expectString(mockLilacTest.mockLastLilacDebugMessage, to, beEqualTo, \
 		         "[Lilac] ERROR - Invalid matcher 'beNone' used.")
-
-	mockLilacTest.mockLastRaisedResultResult = true
-	mockLilacTest.mockLastLilacDebugMessage = ""
-
-	mockLilacTest.expectFloat(3.4565, to, contain, 3.4565)
-	expectBool(mockLilacTest.mockLastRaisedResultResult, to, beFalsy)
-	expectString(mockLilacTest.mockLastLilacDebugMessage, to, beEqualTo, \
-		         "[Lilac] ERROR - Invalid matcher 'contain' used.")
-
-	mockLilacTest.mockLastRaisedResultResult = true
-	mockLilacTest.mockLastLilacDebugMessage = ""
-
-	mockLilacTest.expectFloat(3.4565, notTo, contain, 3.4)
-	expectBool(mockLilacTest.mockLastRaisedResultResult, to, beFalsy)
-	expectString(mockLilacTest.mockLastLilacDebugMessage, to, beEqualTo, \
-		         "[Lilac] ERROR - Invalid matcher 'contain' used.")
 
 
 	; expectBool
@@ -688,14 +837,6 @@ function case_message_invalidmatcher()
 	expectBool(mockLilacTest.mockLastRaisedResultResult, to, beFalsy)
 	expectString(mockLilacTest.mockLastLilacDebugMessage, to, beEqualTo, \
 		         "[Lilac] ERROR - Invalid matcher 'beLessThanOrEqualTo' used.")
-
-	mockLilacTest.mockLastRaisedResultResult = true
-	mockLilacTest.mockLastLilacDebugMessage = ""
-
-	mockLilacTest.expectBool(true, to, contain, "foo")
-	expectBool(mockLilacTest.mockLastRaisedResultResult, to, beFalsy)
-	expectString(mockLilacTest.mockLastLilacDebugMessage, to, beEqualTo, \
-		         "[Lilac] ERROR - Invalid matcher 'contain' used.")
 
 	mockLilacTest.mockLastRaisedResultResult = true
 	mockLilacTest.mockLastLilacDebugMessage = ""
@@ -763,18 +904,46 @@ function case_message_invalidmatcher()
 	expectString(mockLilacTest.mockLastLilacDebugMessage, to, beEqualTo, \
 		         "[Lilac] ERROR - Invalid matcher 'beLessThan' used.")
 
+	return true
 endFunction
 
-function case_testcase_BeforeAfterEach()
+bool function case_expect_form()
+
+endFunction
+
+bool function case_expect_ref()
+
+endFunction
+
+bool function case_expect_int()
+
+endFunction
+
+bool function case_expect_float()
+
+endFunction
+
+bool function case_expect_bool()
+
+endFunction
+
+bool function case_expect_string()
+
+endFunction
+
+
+bool function case_testcase_BeforeAfterEach()
 	mockLilacTest.RunTests()
 
 	; There are 2 test cases, but beforeEach and afterEach 
 	; are expected to run 3 times.
 	expectInt(mockLilacTest.mockBeforeEachCallCount, to, beEqualTo, 3)
 	expectInt(mockLilacTest.mockAfterEachCallCount, to, beEqualTo, 3)
+	return true
 endFunction
 
-function case_testcase_describe()
+bool function case_testcase_describe()
 	mockLilacTest.RunTests()
 	expectInt(mockLilacTest.mockItCallCount, to, beEqualTo, 2)
+	return true
 endFunction

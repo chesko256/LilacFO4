@@ -32,22 +32,24 @@ function afterEach()
 	mockAfterEachCallCount += 1
 endFunction
 
-
 function TestSuites()
 	describe("Testing Suite", LilacTesting_TestSuite())
 endFunction
 
-function LilacTesting_TestSuite()
+bool function LilacTesting_TestSuite()
 	it("should run a test case", LilacTesting_TestCase1())
 	it("should run another test case", LilacTesting_TestCase2())
+	return true
 endFunction
 
-function LilacTesting_TestCase1()
+bool function LilacTesting_TestCase1()
 	debug.trace(createLilacDebugMessage(INFO, "Ran test case 1"))
 	expectBool(true, to, beTruthy)
+	return true
 endFunction
 
-function LilacTesting_TestCase2()
+bool function LilacTesting_TestCase2()
 	debug.trace(createLilacDebugMessage(INFO, "Ran test case 2"))
 	expectBool(false, to, beFalsy)
+	return true
 endFunction

@@ -1,14 +1,17 @@
 _Extends **Quest**_
-## Overview
-Papyrus unit test syntax and test runner. Base script for creating and running Lilac unit tests. Must be extended. Generally executed by <pre> StartQuest <MyUnitTestQuest></pre> from the console.
+## API Version: 2
 
-#### Member Functions
+## Overview
+Papyrus unit test syntax and test runner. Base script for creating and running Lilac unit tests. Must be extended. Generally executed by <pre> StartQuest MyUnitTestQuest</pre> from the console.
+
+#### Functions
 * [describe](#Lilac_describe)
 * [it](#Lilac_it)
 * [beforeAll](#Lilac_beforeAll)
 * [afterAll](#Lilac_afterAll)
 * [beforeEach](#Lilac_beforeEach)
 * [afterEach](#Lilac_afterEach)
+* [expect](#Lilac_expect)
 * [expectForm](#Lilac_expectForm)
 * [expectRef](#Lilac_expectRef)
 * [expectInt](#Lilac_expectInt)
@@ -16,8 +19,8 @@ Papyrus unit test syntax and test runner. Base script for creating and running L
 * [expectBool](#Lilac_expectBool)
 * [expectString](#Lilac_expectString)
 
-### Member Functions
-#### <a name="Lilac_describe"></a>describe
+### Functions
+#### <a name="Lilac_describe"></a>`describe`
 
 Defines and executes a test suite.
 
@@ -40,7 +43,7 @@ Defines and executes a test suite.
     describe("A test suite", myTestSuite())
 
 ***
-#### <a name="Lilac_it"></a>it
+#### <a name="Lilac_it"></a>`it`
 
 Defines and executes a test case (spec).
 
@@ -63,7 +66,7 @@ Defines and executes a test case (spec).
     it("should do something", myTestCase())
 
 ***
-#### <a name="Lilac_beforeAll"></a>beforeAll
+#### <a name="Lilac_beforeAll"></a>`beforeAll`
 
 Override this function to run a block of code before any test case runs (including before any [beforeEach](#robo5)).
 
@@ -81,14 +84,14 @@ None
 
 **Examples**
 
-    ;Make sure the quest isn't running and is on stage 12 before every test.
+    ;Make sure the quest isn't running and is on stage 12 before any test runs.
     function beforeAll()
             TheQuest.Stop()
             TheQuest.SetStage(12)
     endFunction
 
 ***
-#### <a name="Lilac_afterAll"></a>afterAll
+#### <a name="Lilac_afterAll"></a>`afterAll`
 
 Override this function to run a block of code after all test cases run (including after any [afterEach](#robo6)).
 
@@ -106,14 +109,14 @@ None
 
 **Examples**
 
-    ;Make sure the quest isn't running and is on stage 12 after every test.
+    ;Make sure the quest isn't running and is on stage 12 after all tests are run.
     function afterAll()
             TheQuest.Stop()
             TheQuest.SetStage(12)
     endFunction
 
 ***
-#### <a name="Lilac_beforeEach"></a>beforeEach
+#### <a name="Lilac_beforeEach"></a>`beforeEach`
 
 Override this function to run a block of code before each test case.
 
@@ -137,7 +140,7 @@ None
     endFunction
 
 ***
-#### <a name="Lilac_afterEach"></a>afterEach
+#### <a name="Lilac_afterEach"></a>`afterEach`
 
 Override this function to run a block of code after each test case.
 
@@ -161,8 +164,68 @@ None
             destroyer.Delete()
     endFunction
 
+****
+#### <a name="Lilac_expect"></a>`expect`
+
+Defines a new expectation, comparing actual and expected values of any supported type.
+
+**Api version added**
+
+1 (Fallout 4 only)
+
+**Syntax**
+
+    function expect(var akActual, bool abCondition, int aiMatcher, var akExpected = None)
+
+**Parameters**
+
+-   akActual: The value under test.
+
+-   abCondition: The condition (to or notTo).
+
+-   aiMatcher: The matcher. See Notes for a list of valid matchers for this expectation.
+
+-   akExpected: The expected value.
+
+**Examples**
+
+    expect(MyArmor, to, beEqualTo, PowerArmor)
+    expect(5, to, beEqualTo, 5)
+    expect(5, notTo, beEqualTo, 1.4)
+    expect(True, to, beTruthy)
+    expect(0, to, beFalsy)
+    expect("Preston", to, beEqualTo, "Preston")
+
+**Notes**
+
+This is a type-independent version of the individual expect* functions and can be used in place of them.
+
+You must use a valid matcher for the type of Actual and Expected. For instance, you cannot check if a Form is "less than" another Form.
+
+The Actual and Expected must be of the exact same supported type (Form, ObjectReference, Int, Float, Bool, or String).
+
+Using 'beTruthy', 'beFalsy', or 'beNone' matcher and not supplying akExpected can produce a (harmless) Papyrus error (`warning: Passing NONE to non-object argument 4`). If this becomes an issue, use 'to beEqualTo true', or similar, instead.
+
+Valid matchers for this expectation (depending on type):
+
+-   beEqualTo
+
+-   beLessThan
+
+-   beLessThanOrEqualTo
+
+-   beGreaterThan
+
+-   beGreaterThanOrEqualTo
+
+-   beTruthy
+
+-   beFalsy
+
+-   beNone
+
 ***
-#### <a name="Lilac_expectForm"></a>expectForm
+#### <a name="Lilac_expectForm"></a>`expectForm`
 
 Defines a new expectation, comparing actual and expected Forms.
 
@@ -201,7 +264,7 @@ Valid matchers for this expectation:
 -   beNone
 
 ***
-#### <a name="Lilac_expectRef"></a>expectRef
+#### <a name="Lilac_expectRef"></a>`expectRef`
 
 Defines a new expectation, comparing actual and expected ObjectReferences.
 
@@ -240,7 +303,7 @@ Valid matchers for this expectation:
 -   beNone
 
 ***
-#### <a name="Lilac_expectInt"></a>expectInt
+#### <a name="Lilac_expectInt"></a>`expectInt`
 
 Defines a new expectation, comparing actual and expected integers.
 
@@ -285,7 +348,7 @@ Valid matchers for this expectation:
 -   beFalsy
 
 ***
-#### <a name="Lilac_expectFloat"></a>expectFloat
+#### <a name="Lilac_expectFloat"></a>`expectFloat`
 
 Defines a new expectation, comparing actual and expected floats.
 
@@ -330,7 +393,7 @@ Valid matchers for this expectation:
 -   beFalsy
 
 ***
-#### <a name="Lilac_expectBool"></a>expectBool
+#### <a name="Lilac_expectBool"></a>`expectBool`
 
 Defines a new expectation, comparing actual and expected booleans.
 
@@ -367,9 +430,9 @@ Valid matchers for this expectation:
 -   beFalsy
 
 ***
-#### <a name="Lilac_expectString"></a>expectString
+#### <a name="Lilac_expectString"></a>`expectString`
 
-Defines a new expectation, comparing actual and expected string.
+Defines a new expectation, comparing actual and expected strings.
 
 **Api version added**
 
@@ -391,7 +454,7 @@ Defines a new expectation, comparing actual and expected string.
 
 **Examples**
 
-    expectString("its a small world after all", to, contain, "world")
+    expectString("Preston", to, beEqualTo, "Preston")
 
 **Notes**
 
@@ -402,8 +465,5 @@ Valid matchers for this expectation:
 -   beTruthy
 
 -   beFalsy
-
--   contain
-
 
 

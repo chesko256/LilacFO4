@@ -1,1 +1,1 @@
-"E:\SteamLibrary\steamapps\common\skyrim\Papyrus compiler\PapyrusCompiler.exe" %1 -f="TESV_Papyrus_Flags.flg" -i=".\Scripts\Source;..\PapyrusCommon\Scripts\Source;..\PapyrusCommon\Scripts\Source\Dawnguard;..\PapyrusCommon\Scripts\Source\Dragonborn;..\PapyrusCommon\Scripts\Source\Hearthfire" -o=".\Scripts"
+"E:\SteamLibrary\steamapps\common\Fallout 4\Papyrus Compiler\PapyrusCompiler.exe" %1 -f="Institute_Papyrus_Flags.flg" -i=".\Scripts\Source;E:\SteamLibrary\steamapps\common\Fallout 4\Data\Scripts\Source\Base" -o=".\Scripts"
